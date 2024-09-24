@@ -1,0 +1,77 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module main75 ! in 
+    interface  ! in :main75
+        subroutine main(resnum,natm,a,b,c,iresf,iresl) ! in :main75:main75.f
+            integer dimension(10000) :: resnum
+            integer intent(inout) :: natm
+            double precision dimension(50000) :: a
+            double precision dimension(50000) :: b
+            double precision dimension(50000) :: c
+            integer :: iresf
+            integer :: iresl
+        end subroutine main
+        subroutine main_intermediate(a,b,c,ires,resnum,natm) ! in :main75:main75.f
+            double precision dimension(50000) :: a
+            double precision dimension(50000) :: b
+            double precision dimension(50000) :: c
+            integer :: ires
+            integer dimension(10000) :: resnum
+            integer :: natm
+        end subroutine main_intermediate
+        subroutine main_intermediate01(a,b,c,ires,resnum,natm) ! in :main75:main75.f
+            double precision dimension(50000) :: a
+            double precision dimension(50000) :: b
+            double precision dimension(50000) :: c
+            integer :: ires
+            integer dimension(10000) :: resnum
+            integer :: natm
+        end subroutine main_intermediate01
+        subroutine read_coords(atype,restype,chain,resnum,nchains,aarestype,x,canum,natm,maxat,maxres,naa) ! in :main75:main75.f
+            character*4 dimension(maxat) :: atype
+            character*3 dimension(maxat),depend(maxat) :: restype
+            character*1 dimension(maxres) :: chain
+            integer dimension(maxres),depend(maxres) :: resnum
+            integer :: nchains
+            character*3 dimension(maxres),depend(maxres) :: aarestype
+            real dimension(3,maxat),depend(maxat) :: x
+            integer dimension(maxres),depend(maxres) :: canum
+            integer :: natm
+            integer, optional,check(shape(atype, 0) == maxat),depend(atype) :: maxat=shape(atype, 0)
+            integer, optional,check(shape(chain, 0) == maxres),depend(chain) :: maxres=shape(chain, 0)
+            integer :: naa
+        end subroutine read_coords
+        subroutine pdbscroll(lunit,target,error) ! in :main75:main75.f
+            integer :: lunit
+            character*4 :: target
+            logical :: error
+        end subroutine pdbscroll
+        subroutine wrtresi(ires,atype,restype,chain,resnum,x,natm,maxat,maxres) ! in :main75:main75.f
+            integer :: ires
+            character*4 dimension(maxat) :: atype
+            character*3 dimension(maxat),depend(maxat) :: restype
+            character*1 dimension(maxres) :: chain
+            integer dimension(maxres),depend(maxres) :: resnum
+            real dimension(3,maxat),depend(maxat) :: x
+            integer :: natm
+            integer, optional,check(shape(atype, 0) == maxat),depend(atype) :: maxat=shape(atype, 0)
+            integer, optional,check(shape(chain, 0) == maxres),depend(chain) :: maxres=shape(chain, 0)
+        end subroutine wrtresi
+        subroutine wrtresj(ires,atype,restype,chain,resnum,x,natm,maxat,maxres) ! in :main75:main75.f
+            integer :: ires
+            character*4 dimension(maxat) :: atype
+            character*3 dimension(maxat),depend(maxat) :: restype
+            character*1 dimension(maxres) :: chain
+            integer dimension(maxres),depend(maxres) :: resnum
+            real dimension(3,maxat),depend(maxat) :: x
+            integer :: natm
+            integer, optional,check(shape(atype, 0) == maxat),depend(atype) :: maxat=shape(atype, 0)
+            integer, optional,check(shape(chain, 0) == maxres),depend(chain) :: maxres=shape(chain, 0)
+        end subroutine wrtresj
+    end interface 
+end python module main75
+
+! This file was auto-generated with f2py (version:1.25.1).
+! See:
+! https://web.archive.org/web/20140822061353/http://cens.ioc.ee/projects/f2py2e

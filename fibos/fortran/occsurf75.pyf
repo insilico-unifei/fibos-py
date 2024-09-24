@@ -1,0 +1,40 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module occsurf75 ! in 
+    interface  ! in :occsurf75
+        subroutine occsurf ! in :occsurf75:occsurf75.f
+            real dimension(20,10) :: sfeaa
+            character dimension(20,3),intent(c) :: aaname
+            character dimension(20,1),intent(c) :: a1c
+            real dimension(20) :: sfe
+            common /aaa/ sfeaa,aaname,a1c,sfe
+        end subroutine occsurf
+        subroutine aa1to3(strng,onelc) ! in :occsurf75:occsurf75.f
+            character*3 :: strng
+            character*1 :: onelc
+        end subroutine aa1to3
+        subroutine aadist ! in :occsurf75:occsurf75.f
+            real dimension(20,10) :: sfeaa
+            character dimension(20,3),intent(c) :: aaname
+            character dimension(20,1),intent(c) :: a1c
+            real dimension(20) :: sfe
+            common /aaa/ sfeaa,aaname,a1c,sfe
+        end subroutine aadist
+        subroutine getsfe(onelc,sfdeaa,sfdeaai,bstotal,estotal) ! in :occsurf75:occsurf75.f
+            character*1 :: onelc
+            real :: sfdeaa
+            real :: sfdeaai
+            real :: bstotal
+            real :: estotal
+            real dimension(20,10) :: sfeaa
+            character dimension(20,3),intent(c) :: aaname
+            character dimension(20,1),intent(c) :: a1c
+            real dimension(20) :: sfe
+            common /aaa/ sfeaa,aaname,a1c,sfe
+        end subroutine getsfe
+    end interface 
+end python module occsurf75
+
+! This file was auto-generated with f2py (version:1.21.5).
+! See http://cens.ioc.ee/projects/f2py2e/

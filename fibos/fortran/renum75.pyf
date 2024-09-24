@@ -1,0 +1,18 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module renum75 ! in 
+    interface  ! in :renum75
+        subroutine renum ! in :renum75:renum75.f
+        end subroutine renum
+        subroutine ask(lunit,fname,age,prompt) ! in :renum75:renum75.f
+            integer :: lunit
+            character*(*) :: fname
+            character*3 :: age
+            character*(*) :: prompt
+        end subroutine ask
+    end interface 
+end python module renum75
+
+! This file was auto-generated with f2py (version:1.21.5).
+! See http://cens.ioc.ee/projects/f2py2e/

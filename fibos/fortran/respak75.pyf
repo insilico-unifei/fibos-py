@@ -1,0 +1,31 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module respak75 ! in 
+    interface  ! in :respak75
+        subroutine respak ! in :respak75:respak75.f
+        end subroutine respak
+        subroutine askfil(lunit,fname,age,prompt) ! in :respak75:respak75.f
+            integer :: lunit
+            character*40 :: fname
+            character*3 :: age
+            character*(*) :: prompt
+        end subroutine askfil
+        subroutine search(array,target,found) ! in :respak75:respak75.f
+            integer dimension(*) :: array
+            integer :: target
+            logical :: found
+        end subroutine search
+        subroutine rescalc(cntcres,i,j,respv,current,resos) ! in :respak75:respak75.f
+            integer dimension(1000) :: cntcres
+            integer :: i
+            integer :: j
+            real dimension(10000) :: respv
+            integer :: current
+            real dimension(10000) :: resos
+        end subroutine rescalc
+    end interface 
+end python module respak75
+
+! This file was auto-generated with f2py (version:1.21.5).
+! See http://cens.ioc.ee/projects/f2py2e/

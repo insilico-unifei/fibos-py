@@ -1,0 +1,989 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module ds75 ! in 
+    interface  ! in :ds75
+        subroutine runsims(method) ! in :ds75:ds75.f
+            integer :: method
+            real*8 :: time_zero
+            real*8 :: time_total
+            real*8 :: time_inc
+            real*8 :: time_last
+            integer :: outdetl
+            real*8 :: dotden_l
+            real*8 :: dotden_h
+            real*8 :: rp_rpr
+            real*8 :: rad_sm
+            real*8 :: ster_zoom
+            logical :: opt_dot_surface
+            logical :: opt_dot_file
+            logical :: opt_pdb_surface
+            logical :: opt_sterdot_file
+            logical :: opt_dot_midas
+            logical :: opt_vmdpdb_surf
+            logical :: opt_date
+            logical :: opt_refcut
+            logical :: opt_pdbdotkin
+            logical :: opt_dotnrmkin
+            logical :: opt_pdbrext
+            common /timecon/ time_zero,time_total,time_inc,time_last
+            common /outstl/ outdetl
+            common /surfprm/ dotden_l,dotden_h,rp_rpr,rad_sm,ster_zoom
+            common /opt_sims/ opt_dot_surface,opt_dot_file,opt_pdb_surface,opt_sterdot_file,opt_dot_midas,opt_vmdpdb_surf,opt_date,opt_refcut,opt_pdbdotkin,opt_dotnrmkin,opt_pdbrext
+        end subroutine runsims
+        subroutine surf_sims(coords,atnamel,resnumbl,resnamel,atom_rad,natoms,d_probe,dotden,dotcrd,dotnrm,dotarea,dot_iatnum,dot_ishape,ndots,dot_num_atom,dot_startn_atom,method) ! in :ds75:ds75.f
+            real*8 dimension(3,*) :: coords
+            character dimension(*,3),intent(c) :: atnamel
+            integer dimension(*) :: resnumbl
+            character dimension(*,3),intent(c) :: resnamel
+            real*8 dimension(*) :: atom_rad
+            integer :: natoms
+            real*8 :: d_probe
+            real*8 :: dotden
+            real*8 dimension(3,*) :: dotcrd
+            real*8 dimension(3,*) :: dotnrm
+            real*8 dimension(*) :: dotarea
+            integer*4 dimension(2000000) :: dot_iatnum
+            integer*4 dimension(2000000) :: dot_ishape
+            integer :: ndots
+            integer*4 dimension(50000) :: dot_num_atom
+            integer*4 dimension(50000) :: dot_startn_atom
+            integer :: method
+            real*8 :: time_zero
+            real*8 :: time_total
+            real*8 :: time_inc
+            real*8 :: time_last
+            integer :: outdetl
+            real*8 :: dotden_l
+            real*8 :: dotden_h
+            real*8 :: rp_rpr
+            real*8 :: rad_sm
+            real*8 :: ster_zoom
+            logical :: opt_dot_surface
+            logical :: opt_dot_file
+            logical :: opt_pdb_surface
+            logical :: opt_sterdot_file
+            logical :: opt_dot_midas
+            logical :: opt_vmdpdb_surf
+            logical :: opt_date
+            logical :: opt_refcut
+            logical :: opt_pdbdotkin
+            logical :: opt_dotnrmkin
+            logical :: opt_pdbrext
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /timecon/ time_zero,time_total,time_inc,time_last
+            common /outstl/ outdetl
+            common /surfprm/ dotden_l,dotden_h,rp_rpr,rad_sm,ster_zoom
+            common /opt_sims/ opt_dot_surface,opt_dot_file,opt_pdb_surface,opt_sterdot_file,opt_dot_midas,opt_vmdpdb_surf,opt_date,opt_refcut,opt_pdbdotkin,opt_dotnrmkin,opt_pdbrext
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine surf_sims
+        function dist(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 :: dist
+        end function dist
+        function dist2(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 :: dist2
+        end function dist2
+        function anorm(a) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 :: anorm
+        end function anorm
+        function dot(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 :: dot
+        end function dot
+        subroutine cross(a,b,c) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 dimension(3) :: c
+        end subroutine cross
+        subroutine multv(v,a,w) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v
+            real*8 dimension(3,3) :: a
+            real*8 dimension(3) :: w
+        end subroutine multv
+        subroutine vnorm(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+        end subroutine vnorm
+        subroutine vperp(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+        end subroutine vperp
+        subroutine cat(a,b) ! in :ds75:ds75.f
+            real*8 dimension(3,3) :: a
+            real*8 dimension(3,3) :: b
+        end subroutine cat
+        subroutine conj(h,g,ghgt) ! in :ds75:ds75.f
+            real*8 dimension(3,3) :: h
+            real*8 dimension(3,3) :: g
+            real*8 dimension(3,3) :: ghgt
+        end subroutine conj
+        subroutine imatx(a) ! in :ds75:ds75.f
+            real*8 dimension(3,3) :: a
+        end subroutine imatx
+        function det(a,b,c) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 dimension(3) :: c
+            real*8 :: det
+        end function det
+        function collid(p,rp,cnbr,ernbr,mnbr,nnbr,maxnbr,ishape,jnbr,knbr,molnbr,imol,lkf,lknbr) ! in :ds75:ds75.f
+            real*8 dimension(3) :: p
+            real*8 :: rp
+            real*8 dimension(3,maxnbr) :: cnbr
+            real*8 dimension(maxnbr),depend(maxnbr) :: ernbr
+            logical*1 dimension(maxnbr),depend(maxnbr) :: mnbr
+            integer*4 :: nnbr
+            integer*4, optional,check(shape(cnbr,1)==maxnbr),depend(cnbr) :: maxnbr=shape(cnbr,1)
+            integer*2 :: ishape
+            integer*4 :: jnbr
+            integer*4 :: knbr
+            integer*2 dimension(maxnbr),depend(maxnbr) :: molnbr
+            integer*2 :: imol
+            integer*4 :: lkf
+            integer*2 dimension(maxnbr),depend(maxnbr) :: lknbr
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            logical :: collid
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end function collid
+        function buried(p,rp,cnbr,rnbr,mnbr,nnbr,maxnbr,ishape,jnbr,knbr,molnbr,imol) ! in :ds75:ds75.f
+            real*8 dimension(3) :: p
+            real*8 :: rp
+            real*8 dimension(3,maxnbr) :: cnbr
+            real*8 dimension(maxnbr),depend(maxnbr) :: rnbr
+            logical*1 dimension(maxnbr),depend(maxnbr) :: mnbr
+            integer*4 :: nnbr
+            integer*4, optional,check(shape(cnbr,1)==maxnbr),depend(cnbr) :: maxnbr=shape(cnbr,1)
+            integer*2 :: ishape
+            integer*4 :: jnbr
+            integer*4 :: knbr
+            integer*2 dimension(maxnbr),depend(maxnbr) :: molnbr
+            integer*2 :: imol
+            logical :: buried
+        end function buried
+        subroutine genun(u,ar,n) ! in :ds75:ds75.f
+            real*8 dimension(3,n) :: u
+            real*8 dimension(n),depend(n) :: ar
+            integer, optional,check(shape(u,1)==n),depend(u) :: n=shape(u,1)
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+        end subroutine genun
+        subroutine genun01(ri,u,ar,tet,n) ! in :ds75:ds75.f
+            real*8 :: ri
+            real*8 dimension(3,*) :: u
+            real*8 dimension(*) :: ar
+            real*8 dimension(*) :: tet
+            integer :: n
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+        end subroutine genun01
+        subroutine genun02(ri,u,ar,nchi,n,nc) ! in :ds75:ds75.f
+            real*8 :: ri
+            real*8 dimension(3,nc,n) :: u
+            real*8 dimension(n),depend(n) :: ar
+            integer dimension(n),depend(n) :: nchi
+            integer, optional,check(shape(u,2)==n),depend(u) :: n=shape(u,2)
+            integer, optional,check(shape(u,1)==nc),depend(u) :: nc=shape(u,1)
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+        end subroutine genun02
+        subroutine genun03(ri,u,ar,n) ! in :ds75:ds75.f
+            real*8 :: ri
+            real*8 dimension(3,n) :: u
+            real*8 dimension(n),depend(n) :: ar
+            integer, optional,check(shape(u,1)==n),depend(u) :: n=shape(u,1)
+        end subroutine genun03
+        function compare_ij(i,j,n,m,l) ! in :ds75:ds75.f
+            integer :: i
+            integer :: j
+            integer :: n
+            integer :: m
+            integer :: l
+            logical :: compare_ij
+        end function compare_ij
+        function compare_ijk(i,j,k,n,m,l) ! in :ds75:ds75.f
+            integer :: i
+            integer :: j
+            integer :: k
+            integer :: n
+            integer :: m
+            integer :: l
+            logical :: compare_ijk
+        end function compare_ijk
+        function triang_area(a,b,c) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 dimension(3) :: c
+            real*8 :: triang_area
+        end function triang_area
+        function curv_triang_area(a,b,c,center,r) ! in :ds75:ds75.f
+            real*8 dimension(3) :: a
+            real*8 dimension(3) :: b
+            real*8 dimension(3) :: c
+            real*8 dimension(3) :: center
+            real*8 :: r
+            real*8 :: curv_triang_area
+        end function curv_triang_area
+        subroutine gener_conc_dot01(v1,v2,v3,rpr,dens,area_cc,vdot,area_dot,vndot,ndot,dot01_run) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: dens
+            real*8 :: area_cc
+            real*8 dimension(3,128) :: vdot
+            real*8 dimension(128) :: area_dot
+            real*8 dimension(3,128) :: vndot
+            integer :: ndot
+            logical :: dot01_run
+        end subroutine gener_conc_dot01
+        subroutine gener_cc1(v1,v2,v3,rpr,area,ndot,vdot,area_dot,vndot) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: area
+            integer :: ndot
+            real*8 dimension(3,128) :: vdot
+            real*8 dimension(128) :: area_dot
+            real*8 dimension(3,128) :: vndot
+        end subroutine gener_cc1
+        subroutine gener_cc2(v1,v2,v3,rpr,area,ndot,vdot,area_dot,vndot) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: area
+            integer :: ndot
+            real*8 dimension(3,128) :: vdot
+            real*8 dimension(128) :: area_dot
+            real*8 dimension(3,128) :: vndot
+        end subroutine gener_cc2
+        subroutine gener_cc3(v1,v2,v3,rpr,area,ndot,vdot,area_dot,vndot) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: area
+            integer :: ndot
+            real*8 dimension(3,128) :: vdot
+            real*8 dimension(128) :: area_dot
+            real*8 dimension(3,128) :: vndot
+        end subroutine gener_cc3
+        subroutine gener_cc4(v1,v2,v3,rpr,area,ndot,vdot,area_dot,vndot) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: area
+            integer :: ndot
+            real*8 dimension(3,128) :: vdot
+            real*8 dimension(128) :: area_dot
+            real*8 dimension(3,128) :: vndot
+        end subroutine gener_cc4
+        subroutine gener_conc_dot02(up,arup,tetp,prpijk,v1,v2,v3,rpr,dens,area_cc,vdot,area_dot,vndot,nup,ndot) ! in :ds75:ds75.f
+            real*8 dimension(3,*) :: up
+            real*8 dimension(*) :: arup
+            real*8 dimension(*) :: tetp
+            real*8 dimension(3) :: prpijk
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 :: rpr
+            real*8 :: dens
+            real*8 :: area_cc
+            real*8 dimension(3,*) :: vdot
+            real*8 dimension(*) :: area_dot
+            real*8 dimension(3,*) :: vndot
+            integer :: nup
+            integer :: ndot
+        end subroutine gener_conc_dot02
+        subroutine arc_points02(iatom,jatom,ri,rj,dij,hij,rpr,dens,rad_sms,putsm,putsm_smp,narc,ni,nj,v0arc,stor,arc_cross,free_tor,nijs_face,rotang,dot_xyz,dot_vn,dot_area,dot_type,dot_atom,ndot) ! in :ds75:ds75.f
+            integer :: iatom
+            integer :: jatom
+            real*8 :: ri
+            real*8 :: rj
+            real*8 :: dij
+            real*8 :: hij
+            real*8 :: rpr
+            real*8 :: dens
+            real*8 :: rad_sms
+            integer :: putsm
+            integer :: putsm_smp
+            integer :: narc
+            integer :: ni
+            integer :: nj
+            real*8 dimension(3,100) :: v0arc
+            real*8 :: stor
+            logical :: arc_cross
+            logical :: free_tor
+            integer :: nijs_face
+            real*8 dimension(180) :: rotang
+            real*8 dimension(3,5000) :: dot_xyz
+            real*8 dimension(3,5000) :: dot_vn
+            real*8 dimension(5000) :: dot_area
+            integer dimension(5000) :: dot_type
+            integer dimension(5000) :: dot_atom
+            integer :: ndot
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine arc_points02
+        subroutine torus_rot_angl02(atm_mx,nbr_mx,nconc_mx,iat,jat,uij,hij,nvertex,atvert_conc,cvertex,cprobe_ijk,conc_gl_ijk,icfij,concfs_ij,rotang,signrots,aijarcs,garcs) ! in :ds75:ds75.f
+            integer, optional,check(len(nvertex)>=atm_mx),depend(nvertex) :: atm_mx=len(nvertex)
+            integer, optional,check(shape(atvert_conc,0)==nbr_mx),depend(atvert_conc) :: nbr_mx=shape(atvert_conc,0)
+            integer, optional,check(shape(cprobe_ijk,1)==nconc_mx),depend(cprobe_ijk) :: nconc_mx=shape(cprobe_ijk,1)
+            integer :: iat
+            integer :: jat
+            real*8 dimension(3) :: uij
+            real*8 :: hij
+            integer dimension(atm_mx) :: nvertex
+            integer dimension(nbr_mx,atm_mx),depend(atm_mx) :: atvert_conc
+            real*8 dimension(3,nbr_mx,atm_mx),depend(nbr_mx,atm_mx) :: cvertex
+            real*8 dimension(3,nconc_mx) :: cprobe_ijk
+            integer dimension(6,nconc_mx),depend(nconc_mx) :: conc_gl_ijk
+            integer :: icfij
+            integer dimension(nbr_mx),depend(nbr_mx) :: concfs_ij
+            real*8 dimension(nbr_mx),depend(nbr_mx) :: rotang
+            integer dimension(nbr_mx),depend(nbr_mx) :: signrots
+            real*8 dimension(3,nbr_mx),depend(nbr_mx) :: aijarcs
+            real*8 dimension(3,3,nbr_mx),depend(nbr_mx) :: garcs
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+        end subroutine torus_rot_angl02
+        subroutine cxdot_refcut09(gg,dotch,dotchr,dotrot,dotstat,dotco,uij,ds,ri,dotaw,nchmx) ! in :ds75:ds75.f
+            real*8 dimension(3,3) :: gg
+            real*8 dimension(3,nchmx) :: dotch
+            real*8 dimension(3,nchmx),depend(nchmx) :: dotchr
+            logical dimension(nchmx),depend(nchmx) :: dotrot
+            logical dimension(nchmx),depend(nchmx) :: dotstat
+            real*8 dimension(3) :: dotco
+            real*8 dimension(3) :: uij
+            real*8 :: ds
+            real*8 :: ri
+            real*8 :: dotaw
+            integer, optional,check(shape(dotch,1)==nchmx),depend(dotch) :: nchmx=shape(dotch,1)
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine cxdot_refcut09
+        subroutine cxdot_refcut05(gg,dotch,dotchr,dotrot,dotstat,dotco,uij,ds,ri,dotaw,nchmx,lastcut) ! in :ds75:ds75.f
+            real*8 dimension(3,3) :: gg
+            real*8 dimension(3,nchmx) :: dotch
+            real*8 dimension(3,nchmx),depend(nchmx) :: dotchr
+            logical dimension(nchmx),depend(nchmx) :: dotrot
+            logical dimension(nchmx),depend(nchmx) :: dotstat
+            real*8 dimension(3) :: dotco
+            real*8 dimension(3) :: uij
+            real*8 :: ds
+            real*8 :: ri
+            real*8 :: dotaw
+            integer, optional,check(shape(dotch,1)==nchmx),depend(dotch) :: nchmx=shape(dotch,1)
+            logical :: lastcut
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine cxdot_refcut05
+        subroutine inprizm(v1,v2,v3,u,inp) ! in :ds75:ds75.f
+            real*8 dimension(3) :: v1
+            real*8 dimension(3) :: v2
+            real*8 dimension(3) :: v3
+            real*8 dimension(3) :: u
+            logical*1 :: inp
+        end subroutine inprizm
+        subroutine order_dots(natoms,dotcrd,dotnrm,dotarea,dot_iatnum,dot_ishape,dot_num_atom,dot_startn_atom,ndots) ! in :ds75:ds75.f
+            integer :: natoms
+            real*8 dimension(3,2000000) :: dotcrd
+            real*8 dimension(3,2000000) :: dotnrm
+            real*8 dimension(2000000) :: dotarea
+            integer*4 dimension(2000000) :: dot_iatnum
+            integer*4 dimension(2000000) :: dot_ishape
+            integer*4 dimension(50000) :: dot_num_atom
+            integer*4 dimension(50000) :: dot_startn_atom
+            integer :: ndots
+            real*8 :: time_zero
+            real*8 :: time_total
+            real*8 :: time_inc
+            real*8 :: time_last
+            integer :: outdetl
+            real*8 :: dotden_l
+            real*8 :: dotden_h
+            real*8 :: rp_rpr
+            real*8 :: rad_sm
+            real*8 :: ster_zoom
+            logical :: opt_dot_surface
+            logical :: opt_dot_file
+            logical :: opt_pdb_surface
+            logical :: opt_sterdot_file
+            logical :: opt_dot_midas
+            logical :: opt_vmdpdb_surf
+            logical :: opt_date
+            logical :: opt_refcut
+            logical :: opt_pdbdotkin
+            logical :: opt_dotnrmkin
+            logical :: opt_pdbrext
+            common /timecon/ time_zero,time_total,time_inc,time_last
+            common /outstl/ outdetl
+            common /surfprm/ dotden_l,dotden_h,rp_rpr,rad_sm,ster_zoom
+            common /opt_sims/ opt_dot_surface,opt_dot_file,opt_pdb_surface,opt_sterdot_file,opt_dot_midas,opt_vmdpdb_surf,opt_date,opt_refcut,opt_pdbdotkin,opt_dotnrmkin,opt_pdbrext
+        end subroutine order_dots
+        subroutine surf_kin(coords,atnamel,resnumbl,resnamel,natoms,atom_rad,dotden,dotcrd,dotnrm,dotarea,dot_iatnum,dot_ishape,dot_num_atom,dot_startn_atom,ndots) ! in :ds75:ds75.f
+            real*8 dimension(3,*) :: coords
+            character dimension(*,3),intent(c) :: atnamel
+            integer dimension(*) :: resnumbl
+            character dimension(*,3),intent(c) :: resnamel
+            integer :: natoms
+            real*8 dimension(*) :: atom_rad
+            real*8 :: dotden
+            real*8 dimension(3,*) :: dotcrd
+            real*8 dimension(3,*) :: dotnrm
+            real*8 dimension(*) :: dotarea
+            integer*4 dimension(2000000) :: dot_iatnum
+            integer*4 dimension(2000000) :: dot_ishape
+            integer*4 dimension(50000) :: dot_num_atom
+            integer*4 dimension(50000) :: dot_startn_atom
+            integer :: ndots
+            real*8 :: time_zero
+            real*8 :: time_total
+            real*8 :: time_inc
+            real*8 :: time_last
+            integer :: outdetl
+            real*8 :: dotden_l
+            real*8 :: dotden_h
+            real*8 :: rp_rpr
+            real*8 :: rad_sm
+            real*8 :: ster_zoom
+            logical :: opt_dot_surface
+            logical :: opt_dot_file
+            logical :: opt_pdb_surface
+            logical :: opt_sterdot_file
+            logical :: opt_dot_midas
+            logical :: opt_vmdpdb_surf
+            logical :: opt_date
+            logical :: opt_refcut
+            logical :: opt_pdbdotkin
+            logical :: opt_dotnrmkin
+            logical :: opt_pdbrext
+            common /timecon/ time_zero,time_total,time_inc,time_last
+            common /outstl/ outdetl
+            common /surfprm/ dotden_l,dotden_h,rp_rpr,rad_sm,ster_zoom
+            common /opt_sims/ opt_dot_surface,opt_dot_file,opt_pdb_surface,opt_sterdot_file,opt_dot_midas,opt_vmdpdb_surf,opt_date,opt_refcut,opt_pdbdotkin,opt_dotnrmkin,opt_pdbrext
+        end subroutine surf_kin
+        subroutine connect_aamg(atmxyz,atnamel,resnumbl,resnamel,natoms,atom_connect) ! in :ds75:ds75.f
+            real*8 dimension(3,*) :: atmxyz
+            character dimension(*,3),intent(c) :: atnamel
+            integer dimension(*) :: resnumbl
+            character dimension(*,3),intent(c) :: resnamel
+            integer :: natoms
+            integer dimension(4,*) :: atom_connect
+            real*8 :: time_zero
+            real*8 :: time_total
+            real*8 :: time_inc
+            real*8 :: time_last
+            integer :: outdetl
+            real*8 :: dotden_l
+            real*8 :: dotden_h
+            real*8 :: rp_rpr
+            real*8 :: rad_sm
+            real*8 :: ster_zoom
+            logical :: opt_dot_surface
+            logical :: opt_dot_file
+            logical :: opt_pdb_surface
+            logical :: opt_sterdot_file
+            logical :: opt_dot_midas
+            logical :: opt_vmdpdb_surf
+            logical :: opt_date
+            logical :: opt_refcut
+            logical :: opt_pdbdotkin
+            logical :: opt_dotnrmkin
+            logical :: opt_pdbrext
+            common /timecon/ time_zero,time_total,time_inc,time_last
+            common /outstl/ outdetl
+            common /surfprm/ dotden_l,dotden_h,rp_rpr,rad_sm,ster_zoom
+            common /opt_sims/ opt_dot_surface,opt_dot_file,opt_pdb_surface,opt_sterdot_file,opt_dot_midas,opt_vmdpdb_surf,opt_date,opt_refcut,opt_pdbdotkin,opt_dotnrmkin,opt_pdbrext
+        end subroutine connect_aamg
+        subroutine smooth_ccdot02c(nprob_mx,ndot_mx,rp,rad_sm,cprobe_ijk,dotcrd,dotnvec,dotarea,dot_type,ndot_smmx,wdyonsm,ndot_smooth,prpr1_smooth,dot_smooth_gl,wdyonrm) ! in :ds75:ds75.f
+            integer, optional,check(shape(cprobe_ijk,1)==nprob_mx),depend(cprobe_ijk) :: nprob_mx=shape(cprobe_ijk,1)
+            integer, optional,check(shape(dotcrd,1)==ndot_mx),depend(dotcrd) :: ndot_mx=shape(dotcrd,1)
+            real*8 :: rp
+            real*8 :: rad_sm
+            real*8 dimension(3,nprob_mx) :: cprobe_ijk
+            real*8 dimension(3,ndot_mx) :: dotcrd
+            real*8 dimension(3,ndot_mx),depend(ndot_mx) :: dotnvec
+            real*8 dimension(ndot_mx),depend(ndot_mx) :: dotarea
+            integer dimension(ndot_mx),depend(ndot_mx) :: dot_type
+            integer, optional,check(shape(prpr1_smooth,1)==ndot_smmx),depend(prpr1_smooth) :: ndot_smmx=shape(prpr1_smooth,1)
+            integer dimension(2,ndot_mx),depend(ndot_mx) :: wdyonsm
+            integer :: ndot_smooth
+            integer dimension(2,ndot_smmx) :: prpr1_smooth
+            integer dimension(ndot_smmx),depend(ndot_smmx) :: dot_smooth_gl
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyonrm
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine smooth_ccdot02c
+        subroutine remove_ccdot02d(nprob_mx,ndot_mx,nconcij_mx,nconc_mx,icfij,arc_cross,rp,bij,uij,hij,rad_sm,dens,aic,ajc,radi,radj,cprobe_ijk,nconc_glb_nprpos,probe_wyonrm,cvert_probe,concf_ijf,rotang,signrot,start_dotn,stop_dotn,dotcrdl,wdyon,wdyonrm,ndot_smmx,wdyonsm,ndot_smooth,prpr1_smooth,dot_smooth_gl) ! in :ds75:ds75.f
+            integer, optional,check(shape(cvert_probe,2)==nprob_mx),depend(cvert_probe) :: nprob_mx=shape(cvert_probe,2)
+            integer, optional,check(shape(dotcrdl,1)==ndot_mx),depend(dotcrdl) :: ndot_mx=shape(dotcrdl,1)
+            integer, optional,check(len(concf_ijf)>=nconcij_mx),depend(concf_ijf) :: nconcij_mx=len(concf_ijf)
+            integer, optional,check(shape(cprobe_ijk,1)==nconc_mx),depend(cprobe_ijk) :: nconc_mx=shape(cprobe_ijk,1)
+            integer :: icfij
+            integer :: arc_cross
+            real*8 :: rp
+            real*8 dimension(3) :: bij
+            real*8 dimension(3) :: uij
+            real*8 :: hij
+            real*8 :: rad_sm
+            real*8 :: dens
+            real*8 dimension(3) :: aic
+            real*8 dimension(3) :: ajc
+            real*8 :: radi
+            real*8 :: radj
+            real*8 dimension(3,nconc_mx) :: cprobe_ijk
+            integer dimension(nconc_mx),depend(nconc_mx) :: nconc_glb_nprpos
+            logical*1 dimension(nconc_mx),depend(nconc_mx) :: probe_wyonrm
+            real*8 dimension(3,3,nprob_mx) :: cvert_probe
+            integer dimension(nconcij_mx) :: concf_ijf
+            real*8 dimension(nconcij_mx),depend(nconcij_mx) :: rotang
+            integer dimension(nconcij_mx),depend(nconcij_mx) :: signrot
+            integer dimension(nprob_mx),depend(nprob_mx) :: start_dotn
+            integer dimension(nprob_mx),depend(nprob_mx) :: stop_dotn
+            real*8 dimension(3,ndot_mx) :: dotcrdl
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyon
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyonrm
+            integer, optional,check(shape(prpr1_smooth,1)==ndot_smmx),depend(prpr1_smooth) :: ndot_smmx=shape(prpr1_smooth,1)
+            integer dimension(2,ndot_mx),depend(ndot_mx) :: wdyonsm
+            integer :: ndot_smooth
+            integer dimension(2,ndot_smmx) :: prpr1_smooth
+            integer dimension(ndot_smmx),depend(ndot_smmx) :: dot_smooth_gl
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine remove_ccdot02d
+        subroutine arc_points02c(iatom,jatom,ri,rj,dij,hij,rpr,dens,rad_sms,putsm,putsm_smp,narc,ni,nj,v0arc,stor,arc_cross,free_tor,nijs_face,rotang,smp2xyz,dot_xyz,dot_vn,dot_area,dot_type,dot_atom,ndot) ! in :ds75:ds75.f
+            integer :: iatom
+            integer :: jatom
+            real*8 :: ri
+            real*8 :: rj
+            real*8 :: dij
+            real*8 :: hij
+            real*8 :: rpr
+            real*8 :: dens
+            real*8 :: rad_sms
+            integer :: putsm
+            integer :: putsm_smp
+            integer :: narc
+            integer :: ni
+            integer :: nj
+            real*8 dimension(3,100) :: v0arc
+            real*8 :: stor
+            integer :: arc_cross
+            logical :: free_tor
+            integer :: nijs_face
+            real*8 dimension(180) :: rotang
+            real*8 dimension(3,2) :: smp2xyz
+            real*8 dimension(3,5000) :: dot_xyz
+            real*8 dimension(3,5000) :: dot_vn
+            real*8 dimension(5000) :: dot_area
+            integer dimension(5000) :: dot_type
+            integer dimension(5000) :: dot_atom
+            integer :: ndot
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine arc_points02c
+        subroutine remove_ccdot03b(nprob_mx,ndot_mx,nconc_mx,nprobpost,rp,rad_sm,dens,conc_gl_ijk,nconc_glb_nprpos,cprobe_ijk,cvert_probe,probe_wyonrm,start_dotn,stop_dotn,dotcrdl,wdyon,wdyonrm,ndot_smmx,wdyonsm,ndot_smooth,prpr1_smooth,dot_smooth_gl) ! in :ds75:ds75.f
+            integer, optional,check(shape(conc_gl_ijk,1)==nprob_mx),depend(conc_gl_ijk) :: nprob_mx=shape(conc_gl_ijk,1)
+            integer, optional,check(shape(dotcrdl,1)==ndot_mx),depend(dotcrdl) :: ndot_mx=shape(dotcrdl,1)
+            integer, optional,check(shape(cprobe_ijk,1)==nconc_mx),depend(cprobe_ijk) :: nconc_mx=shape(cprobe_ijk,1)
+            integer :: nprobpost
+            real*8 :: rp
+            real*8 :: rad_sm
+            real*8 :: dens
+            integer dimension(6,nprob_mx) :: conc_gl_ijk
+            integer dimension(nprob_mx),depend(nprob_mx) :: nconc_glb_nprpos
+            real*8 dimension(3,nconc_mx) :: cprobe_ijk
+            real*8 dimension(3,3,nprob_mx),depend(nprob_mx) :: cvert_probe
+            logical*1 dimension(nconc_mx),depend(nconc_mx) :: probe_wyonrm
+            integer dimension(nprob_mx),depend(nprob_mx) :: start_dotn
+            integer dimension(nprob_mx),depend(nprob_mx) :: stop_dotn
+            real*8 dimension(3,ndot_mx) :: dotcrdl
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyon
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyonrm
+            integer, optional,check(shape(prpr1_smooth,1)==ndot_smmx),depend(prpr1_smooth) :: ndot_smmx=shape(prpr1_smooth,1)
+            integer dimension(2,ndot_mx),depend(ndot_mx) :: wdyonsm
+            integer :: ndot_smooth
+            integer dimension(2,ndot_smmx) :: prpr1_smooth
+            integer dimension(ndot_smmx),depend(ndot_smmx) :: dot_smooth_gl
+            real*8 :: pi2
+            real*8 :: null
+            real*8 :: onehalf
+            real*8 :: one
+            real*8 :: two
+            real*8 :: three
+            real*8 :: four
+            real*8 :: big
+            real*8 :: small
+            real*8 :: toler_nb
+            real*8 :: toler_pr
+            real*8 :: toler_yon
+            real*8 :: toler_d
+            real*8 :: toler_cx
+            real*8 :: toler_ovr
+            real*8 :: toler_cross
+            common /constanti/ pi2,null,onehalf,one,two,three,four,big,small
+            common /tolerance/ toler_nb,toler_pr,toler_yon,toler_d,toler_cx,toler_ovr,toler_cross
+        end subroutine remove_ccdot03b
+        subroutine remove_sdsmp2(ndot_mx,nsmp2mx,ndotsmp2mx,nsmp2tot,ndotsmp2,rad_sm,dotsmp2_dgl,dotsmp2_nsm,smp2txyz,dotcrd,dotnvec,dotarea,dot_type,wdyonrm) ! in :ds75:ds75.f
+            integer, optional,check(shape(dotcrd,1)==ndot_mx),depend(dotcrd) :: ndot_mx=shape(dotcrd,1)
+            integer, optional,check(shape(smp2txyz,1)==nsmp2mx),depend(smp2txyz) :: nsmp2mx=shape(smp2txyz,1)
+            integer, optional,check(len(dotsmp2_dgl)>=ndotsmp2mx),depend(dotsmp2_dgl) :: ndotsmp2mx=len(dotsmp2_dgl)
+            integer :: nsmp2tot
+            integer :: ndotsmp2
+            real*8 :: rad_sm
+            integer dimension(ndotsmp2mx) :: dotsmp2_dgl
+            integer dimension(ndotsmp2mx),depend(ndotsmp2mx) :: dotsmp2_nsm
+            real*8 dimension(3,nsmp2mx) :: smp2txyz
+            real*8 dimension(3,ndot_mx) :: dotcrd
+            real*8 dimension(3,ndot_mx),depend(ndot_mx) :: dotnvec
+            real*8 dimension(ndot_mx),depend(ndot_mx) :: dotarea
+            integer dimension(ndot_mx),depend(ndot_mx) :: dot_type
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyonrm
+        end subroutine remove_sdsmp2
+        subroutine clust_smooth_dot(ndot_mx,ndot_smooth,dotcrd,dotnvec,dotarea,dot_type,dot_smooth_gl,wdyonrm) ! in :ds75:ds75.f
+            integer, optional,check(shape(dotcrd,1)==ndot_mx),depend(dotcrd) :: ndot_mx=shape(dotcrd,1)
+            integer, optional,check(len(dot_smooth_gl)>=ndot_smooth),depend(dot_smooth_gl) :: ndot_smooth=len(dot_smooth_gl)
+            real*8 dimension(3,ndot_mx) :: dotcrd
+            real*8 dimension(3,ndot_mx),depend(ndot_mx) :: dotnvec
+            real*8 dimension(ndot_mx),depend(ndot_mx) :: dotarea
+            integer dimension(ndot_mx),depend(ndot_mx) :: dot_type
+            integer dimension(ndot_smooth) :: dot_smooth_gl
+            logical*1 dimension(ndot_mx),depend(ndot_mx) :: wdyonrm
+        end subroutine clust_smooth_dot
+        subroutine assign_rq(opt_ass,natt_s,atnam_s,rnam_s,atrad_s,atcrg_s) ! in :ds75:ds75.f
+            character*2 :: opt_ass
+            integer :: natt_s
+            character dimension(50000,3),intent(c) :: atnam_s
+            character dimension(50000,3),intent(c) :: rnam_s
+            real*8 dimension(50000) :: atrad_s
+            real*8 dimension(50000) :: atcrg_s
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end subroutine assign_rq
+        subroutine cent(atm,res,rnum,chn,nent) ! in :ds75:ds75.f
+            character*6 :: atm
+            character*3 :: res
+            character*4 :: rnum
+            character*1 :: chn
+            integer :: nent
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end subroutine cent
+        subroutine cfind(atm,res,rnum,chn,ifind,n) ! in :ds75:ds75.f
+            character*6 :: atm
+            character*3 :: res
+            character*4 :: rnum
+            character*1 :: chn
+            integer :: ifind
+            integer :: n
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end subroutine cfind
+        subroutine elb(txt,len_bn) ! in :ds75:ds75.f
+            character*(*) :: txt
+            integer :: len_bn
+        end subroutine elb
+        subroutine rent(atm,res,nent) ! in :ds75:ds75.f
+            character*6 :: atm
+            character*3 :: res
+            integer :: nent
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end subroutine rent
+        subroutine rfind(atm,res,ifind,n) ! in :ds75:ds75.f
+            character*6 :: atm
+            character*3 :: res
+            integer :: ifind
+            integer :: n
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end subroutine rfind
+        subroutine up(txt,len_bn) ! in :ds75:ds75.f
+            character*(*) :: txt
+            integer :: len_bn
+        end subroutine up
+        function ichash(atxt,rtxt,ntxt,ctxt) ! in :ds75:ds75.f
+            character*6 :: atxt
+            character*3 :: rtxt
+            character*4 :: ntxt
+            character*1 :: ctxt
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            integer :: ichash
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end function ichash
+        function irhash(atxt,rtxt) ! in :ds75:ds75.f
+            character*6 :: atxt
+            character*3 :: rtxt
+            integer dimension(1000) :: irlink
+            integer dimension(1000) :: irnumb
+            integer dimension(1000) :: iclink
+            integer dimension(1000) :: icnumb
+            integer :: irtot
+            integer :: ictot
+            character dimension(1000,6),intent(c) :: atnam
+            character dimension(1000,3),intent(c) :: rnam
+            character dimension(1000,6),intent(c) :: catnam
+            character dimension(1000,1),intent(c) :: cchn
+            character dimension(1000,3),intent(c) :: crnam
+            character dimension(1000,4),intent(c) :: crnum
+            real*8 dimension(1000) :: radt
+            real*8 dimension(1000) :: chrgvt
+            integer :: irhash
+            common /linkk/ irlink,irnumb,iclink,icnumb,irtot,ictot
+            common /name/ atnam,rnam,catnam,cchn,crnam,crnum
+            common /value/ radt,chrgvt
+        end function irhash
+    end interface 
+end python module ds75
+
+! This file was auto-generated with f2py (version:1.21.5).
+! See http://cens.ioc.ee/projects/f2py2e/

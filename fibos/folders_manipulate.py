@@ -13,14 +13,10 @@ def change_files(pdb_name):
     name_pdb = pdb_name
     name_raydist = pdb_name
     if(os.path.exists("prot.srf")):
-        shutil.copy("prot.srf", "fibos_files")
-        os.remove("prot.srf")
-        name_pdb = "fibos_files/prot_"+name_pdb+".srf"
-        os.rename("fibos_files/prot.srf", name_pdb)
+        name_pdb = "prot_"+name_pdb+".srf"
+        os.rename("prot.srf", name_pdb)
 
     if (os.path.exists("raydist.lst")):
-        shutil.copy("raydist.lst", "fibos_files")
-        os.remove("raydist.lst")
-        name_raydist = "fibos_files/raydist_" + name_raydist + ".lst"
-        os.rename("fibos_files/raydist.lst", name_raydist)
+        name_raydist = "raydist_" + name_raydist + ".lst"
+        os.rename("raydist.lst", name_raydist)
     return (name_pdb)

@@ -441,7 +441,7 @@ c Start reading atoms
                  write(6,30)
                  goto 90
                else if (line(1:3) .eq. 'END') then
-                 write(6,35)
+c                 write(6,35)
                  goto 100
                else
                  goto 100

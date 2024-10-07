@@ -108,7 +108,7 @@ c part_i.ms
 
 c read the first line of "part.inp"
 c if 0, no ray file, if 1, write ray display file
-        print *,path
+C        print *,path
         open(unit=kanal,file='part.inp',status='old')
 
         read(kanal,"(a)")rayflag

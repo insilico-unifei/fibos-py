@@ -13,15 +13,16 @@ def configuration(parent_package='', top_path=None):
 
 if __name__ == '__main__':
     setup(
-        name = 'fibos',
+        name = 'FIBOS',
         version = '1.0.1',
         install_requires = [
-            'setuptools>=67.8.0',
-            'numpy>=1.21.5',
-            'biopython>=1.81',
+            'setuptools==67.8.0',
+            'numpy==1.21.5',
+            'biopython==1.81',
             'testresources>=1.8.0',
-            'pandas>=2.0.0',
+            'pandas==2.0.0',
         ],
+        python_requires='<3.10, <4',
         description = 'Package to calcule Occluded Surfaces',
         author = 'Herson Hebert Mendes Soares',
         packages=find_packages(),

@@ -104,7 +104,7 @@ c left in for future use.
 
        call read_coords (atype,restype,chain,resnum,nchains,
      &  aarestype,x,canum,natm,maxat,maxres,naa)
-        print*, 'naa = ', naa
+c        print*, 'naa = ', naa
 
 c Close pdb file
          close(unit=1)

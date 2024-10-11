@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: FIBOS
-Version: 1.0.1
+Version: 1.0.1.2
 Summary: Package to calcule Occluded Surfaces
 Author: Herson Hebert Mendes Soares
-Requires-Python: <3.10, <4
+Requires-Python: <3.12, <4
 License-File: LICENSE

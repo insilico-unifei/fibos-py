@@ -22,7 +22,7 @@ if __name__ == '__main__':
             'testresources>=1.8.0',
             'pandas==2.0.0',
         ],
-        python_requires='<3.12, <4',
+        python_requires='<3.11, <4',
         description = 'Package to calcule Occluded Surfaces',
         author = 'Herson Hebert Mendes Soares',
         packages=find_packages(),

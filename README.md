@@ -1,164 +1,139 @@
-# FIBOS-PY (BETA)
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
 
-## Description
-The FIBOS-PY package was developed with the objective to offer in Python the Occluded Surface methodology, created by Patrick Fleming and coauthors [Pattabiraman, Ward, & Fleming, 1995].
+# Phyton fibos (BETA)
 
-There is also a BETA version of the FIBOS-R package implemented as a library for the R language, which can be accessed at: [FIBOS-R (BETA)](https://github.com/hersonhebert/fibos_r.git).
-## Functionalities
-The package allows the calculation of occluded surface areas between atoms of a molecule, using as input a PDB code or PDB file.
+The Occluded Surface (OS) algorithm is a widely used approach for analyzing atomic packing in biomolecules. 
+Here, we introduce **fibos**, an R and Python package that extends the OS methodology with enhancements. 
+It integrates efficient Fortran code from the original OS implementation and introduces an innovation: 
+the use of Fibonacci spirals for surface point distribution. This modification reduces anisotropy and 
+ensures a more uniform and even distribution of surface dots, improving the accuracy
+of the algorithm.
 
-## Requirements
+R fibos version: https://github.com/insilico-unifei/fibos-R.git.
 
-Firstly, the installation of the 'testresources' package is still necessary. If you do not have, you should use the following command:
+## Operating Systems
 
-For Python 2:
-    
-    sudo apt install python-testresources
+fibos was designed to be multiplatform and run on Linux, Windows and Mac.
+However, it has been tested on the following versions:
 
-For Python 3:
-    
-    sudo apt install python3-testresources
+- **Linux**: Ubuntu ($\geq$ 20.04)
+- **Windows**: Windows 11
+- **Mac**: MacOS 15.0.1
 
-The FIBOS library has some dependencies that need to be installed beforehand. Follow the steps below:
+## Instalation
 
-1. First, download the file [fibos.yml](https://github.com/hersonhebert/fibos_py/blob/main/fibos.yml).
+### Python versions
 
-   ** Note: If you do not have a Conda environment installed, you will need to install it. For this, please refer to the [Docs Anaconda](https://docs.anaconda.com/free/anaconda/install/linux/). 
+Tested on: 3.9.6, 3.10
 
+### Virtual environment (venv) 
 
-2. Create a Conda environment using the following command:
+It is highly recommended to work with virtual environments in Python
 
-        conda env create -f fibos.yml
-
-3. After creating the Conda environment, activate it using the following command:
-    
-        conda activate fibos-env
-
-These additional libraries are also required:
- - os
- - shutil
- - pkgutils
-
-## How use
-### Installing the Package
-    
-    pip install git+https://github.com/hersonhebert/fibos_py
-    
-### Using the Package:
-In this beta version, some functions were implemented:
-
-
-1. **occluded_surface**: This function is responsible for computing the occluded areas between atoms and returning the results as a tibble/data frame. Additionally, it generates the prot.srf file as a side effect.
-
-   Parameters:
-
-   - pdb: this can either be the code or path/file of the PDB that represents a protein. If you wish to obtain the file online from the RCSB PDB site, simply enter the PDB code. If the file is saved locally, enter the file path.
-
-   - method: this parameter determines the method used to calculate the occluded areas between atoms. Accepts the strings "OS" (tradicional) or "FIBOS" (experimental).
-
-
-2. **read_prot**: The function read_prot is applied when reading the prot.srf file, returning a DataFrame so that the user can manipulate the data.
-
-   Parameters:
-   
-   - prot.srf: "The prot.srf file contains all the information from the calculation of occluded surface and extension of surface normals." You can view more about Prot File in [Prot.srf](https://pages.jh.edu/pfleming/sw/os/prot.srf.html).
-
-3. **respack**:The "respack" function aims to calculate the value of OSP, which is related to the assessment of residue packing.
-
-   Parameters:
-   - prot.srf: "The prot.srf file contains all the information from the calculation of occluded surface and extension of surface normals." You can view more about Prot File in [Prot.srf](https://pages.jh.edu/pfleming/sw/os/prot.srf.html).
-
-4. **read_Disp**: For reading the file containing the coordinates and values of dots and normals related to surface occlusion, the function read_Disp is applied, returning a DataFrame so that the user can manipulate the data.
-
-   Parameters:
-   
-   - raydist.lst: "The file raydist.lst (output by occluded surface function) contains the coordinates, lengths, and normal vectors for the rays of the residue(s).".
-
-5. **pymol_visualize**: Using the "pymol_visualize" function, it is possible to generate visualizations of the dots and rays generated during the execution of the "occluded surface" function.
-
-   Parameters:
-   
-   - raydist: It is a variable of type DataFrame returned by the read_Disp function.
-   - pdb: this can either be the code or path/file of the PDB that represents a protein. If you wish to obtain the file online from the RCSB PDB site, simply enter the PDB code. If the file is saved locally, enter the file path.
-   - type: In the "type" option, you can choose how you want to visualize the results of the packing process: as rays  or dots.
-
-
-
-
-## Examples
-### First Example: 
-Calculating Occluded Surfaces:
 ```
+# From shell terminal, in project directory:
+# (creates a virtual environment ".venv")
+$ python3 -m venv .venv
+
+# Activate the virtual environment:
+
+# Mac/Linux
+$ source env/bin/activate
+
+# Windows
+$ .\env\Scripts\activate 
+
+# The prompt will change to something like:
+(.venv)$  
+```
+
+### Instalations
+
+These additional packages may be required (install in .venv):
+
+```
+(.venv)$ pip install testresources 
+(.venv)$ pip install biopython 
+```
+
+Install fibos:
+
+```         
+pip install git+https://github.com/insilico-unifei/fibos-py
+```
+
+## Main functions:
+
+1.  **`occluded_surface(pdb, method = "FIBOS")`**: Implements the Occluded Surface 
+algorithm, generating points, areas, and normals for each atom. It accepts the path 
+to a PDB file and a method selection—either the classic 'OS' or the default 'FIBOS'. 
+The function returns the results as a table and creates a file named 
+prot_PDBid.srf in the fibos_file directory.
+
+1.  **`osp(file)`**: Implements the Occluded Surface Packing (OSP) metric for 
+each residue. Accepts a path to an SRF file generated by occluded_surface as a 
+parameter and returns the results as a table summarized by residue.
+
+### A simple example:
+
+```     
+import os
+import shutil
+import pkgutil
 import fibos
-    prot = fibos.occluded_surface("1ubq","FIBOS")
-```
-Output: 
- - prot.srf file.
- - raydist.lst file.
- - Dataframe of Occluded Surface Values.
+from Bio.PDB import PDBList
+from concurrent.futures import ThreadPoolExecutor
 
-### Second Example: 
-Readind Prot File:
-```
-import fibos
-    prot = read_prot("prot.srf")
-```
-Output:
-   - Dataframe of Occluded Surface Values.
+# Create folder if it does not exist
+folder = "PDB"
+os.makedirs(folder, exist_ok=True)
 
-### Third Example: 
-Calculating OSP Value:
-```
-import fibos
-    respack = fibos.respack("prot.srf")
-```
-Output:
+# PDB ids
+pdb_ids = ["8RXN", "1ROP"]
 
-![respack.png](respack.png)
+# Initialize PDBList object
+pdbl = PDBList()
 
-### Fourth Example:
-Reading raydist file:
-```
-import fibos
-    raydist = read_Disp("raydist.lst")
-```
-Output: 
+# Get PDB from RCSB, put it in folder and return path to it
+pdb_paths = [pdbl.retrieve_pdb_file(pdb_id, pdir=folder, file_format='pdb') for pdb_id in pdb_ids]
 
-   - Dataframe with rays and dots values.
-
-### Fifth Example:
-Generating Dots Visualization:
-```
-import fibos
-    raydist = read_disp("raydist.lst")
-    fibos.pymol_visualize(raydist,"1ubq", "dots")
-```
-Output: 
-
-![dots.png](dots.png)
-
-### Sixth Example: 
-Generating Rays Visualization
-```
-import fibos
-    raydist = read_disp("raydist.lst")
-    fibos.pymol_visualize(raydist,"1ubq", "rays")
+with ThreadPoolExecutor(max_workers=2) as executor:
+    pdb_fibos = list(executor.map(lambda x: fibos.occluded_surface(x, method="FIBOS"), pdb_paths))
 ```
 
-Output:
-
-![rays.png](rays.png)
+### More complex example:
+[Here](https://github.com/insilico-unifei/fibos-R-case-study-supp.git) we show a 
+case study (in R only), aiming to compare the packing density between experimentally 
+determinedstructures and the same structures predicted by AlphaFold (AF).
 
 ## Authors
 
-- Carlos Silveira:  carlos.silveira@unifei.edu.br
-- Herson Soares: d2020102075@unifei.edu.br
-- João Romanelli: joaoromanelli@unifei.edu.br
-- Patrick Fleming: Pat.Fleming@jhu.edu
+-   Carlos Silveira ([carlos.silveira\@unifei.edu.br](mailto:carlos.silveira@unifei.edu.br))\
+    Herson Soares ([d2020102075\@unifei.edu.br](mailto:d2020102075@unifei.edu.br))\
+    Institute of Technological Sciences,\
+    Federal University of Itajubá,\
+    Campus Itabira, Brazil.
+
+-   João Romanelli ([joaoromanelli\@unifei.edu.br](mailto:joaoromanelli@unifei.edu.br)) \
+    Institute of Applied and Pure Sciences, \
+    Federal University of Itajubá, \
+    Campus Itabira, Brazil.
+
+-   Patrick Fleming ([Pat.Fleming\@jhu.edu](mailto:Pat.Fleming@jhu.edu)) \
+    Thomas C. Jenkins Department of Biophysics, \
+    Johns Hopkins University, \
+    Baltimore, MD, USA
 
 ## References
 
-Pattabiraman, N., Ward, K. B., & Fleming, P. J. (1995). Occluded molecular surface: Analysis of protein packing. Journal of Molecular Recognition, 8, 334–344. https://doi.org/doi.org/10.1002/jmr.300080603
+Fleming PJ, Richards FM. Protein packing: Dependence on protein size, secondary structure and amino acid composition. J Mol Biol 2000;299:487–98.
+
+Pattabiraman N, Ward KB, Fleming PJ. Occluded molecular surface: Analysis of protein packing. J Mol Recognit 1995;8:334–44.
 
 ## Status
+
 In Progress.

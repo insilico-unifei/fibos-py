@@ -4,7 +4,9 @@ import main_intermediary
 import pkgutil
 import shutil
 import tempfile
+from pathlib import Path
 from Bio.PDB import PDBParser
+from Bio import PDB
 from read_os import read_prot
 from folders_manipulate import create_folder
 from folders_manipulate import change_files
@@ -19,18 +21,27 @@ def occluded_surface(pdb,method = "FIBOS"):
     remove_files()
     #create_folder(pdb)
     source_path = os.getcwd()
+    change = False
+    name_pdb = pdb
     if not os.path.exists("fibos_files"):
         os.makedirs("fibos_files")
-    with tempfile.TemporaryDirectory() as temp_dir:
-        if not (pdb.endswith(".pdb")):
+    if not (pdb.endswith(".pdb")):
             arq_aux = pdb + ".pdb"
             if os.path.exists(arq_aux):
                 os.remove(arq_aux)
-        else:
-            name_pdb = pdb
+    else:
+            change = True
             name_pdb = name_pdb[-8:]
-            if not (os.path.exists(name_pdb)):
-                raise FileNotFoundError(f"File not Found: {name_pdb}")
+            if (os.path.exists(pdb) == False):
+                raise FileNotFoundError(f"File not Found: {pdb}")
+            #parser = PDB.PDBParser()
+            #estrutura = parser.get_structure("protein", pdb)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        if(change == True):
+            #io = PDB.PDBIO()
+            #io.set_structure(estrutura)
+            #output_pdb = os.path.join(temp_dir, os.path.basename(name_pdb))
+            #io.save(output_pdb)
             shutil.copy(pdb,temp_dir)
         os.chdir(temp_dir)
         pdb = pdb.lower()
@@ -40,7 +51,7 @@ def occluded_surface(pdb,method = "FIBOS"):
         path_abs = os.path.abspath(path_pack)
         path_abs = path_abs+"/radii"
         shutil.copy(path_abs,".")
-        iresl = cleaner.get_file(pdb)
+        iresl = cleaner.get_file(name_pdb)
         method = method.upper()
         meth = 0
         if method == "OS":

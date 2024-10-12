@@ -29,7 +29,7 @@ def occluded_surface(pdb,method = "FIBOS"):
         else:
             name_pdb = pdb
             name_pdb = name_pdb[-8:]
-            if not (os.path.exists(name_pdb)):
+            if not (os.path.exists(pdb)):
                 raise FileNotFoundError(f"File not Found: {name_pdb}")
             shutil.copy(pdb,temp_dir)
         os.chdir(temp_dir)

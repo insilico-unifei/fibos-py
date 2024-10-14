@@ -28,7 +28,15 @@ However, it has been tested on the following versions:
 
 ### Python versions
 
-Tested on: 3.9.6, 3.10
+Tested on: 3.9, 3.10
+
+### Preliminar packages:
+
+Some preliminar packages may be necessary:
+
+```
+$ sudo apt-get install python3.x-dev # Ubuntu
+```
 
 ### Virtual environment (venv) 
 
@@ -42,10 +50,10 @@ $ python3 -m venv .venv
 # Activate the virtual environment:
 
 # Mac/Linux
-$ source env/bin/activate
+$ source .venv/bin/activate
 
 # Windows
-$ .\env\Scripts\activate 
+$ .venv\Scripts\activate
 
 # The prompt will change to something like:
 (.venv)$  
@@ -53,7 +61,7 @@ $ .\env\Scripts\activate
 
 ### Instalations
 
-These additional packages may be required (install in .venv):
+These additional Python packages may be required (install in .venv):
 
 ```
 (.venv)$ pip install testresources 

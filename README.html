@@ -377,7 +377,12 @@ Mac. However, it has been tested on the following versions:</p>
 <h2>Instalation</h2>
 <div id="python-versions" class="section level3">
 <h3>Python versions</h3>
-<p>Tested on: 3.9.6, 3.10</p>
+<p>Tested on: 3.9, 3.10</p>
+</div>
+<div id="preliminar-packages" class="section level3">
+<h3>Preliminar packages:</h3>
+<p>Some preliminar packages may be necessary:</p>
+<pre><code>$ sudo apt-get install python3.x-dev # Ubuntu</code></pre>
 </div>
 <div id="virtual-environment-venv" class="section level3">
 <h3>Virtual environment (venv)</h3>
@@ -390,17 +395,18 @@ $ python3 -m venv .venv
 # Activate the virtual environment:
 
 # Mac/Linux
-$ source env/bin/activate
+$ source .venv/bin/activate
 
 # Windows
-$ .\env\Scripts\activate 
+$ .venv\Scripts\activate
 
 # The prompt will change to something like:
 (.venv)$  </code></pre>
 </div>
 <div id="instalations" class="section level3">
 <h3>Instalations</h3>
-<p>These additional packages may be required (install in .venv):</p>
+<p>These additional Python packages may be required (install in
+.venv):</p>
 <pre><code>(.venv)$ pip install testresources 
 (.venv)$ pip install biopython </code></pre>
 <p>Install fibos:</p>

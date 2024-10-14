@@ -30,12 +30,14 @@ However, it has been tested on the following versions:
 
 Tested on: 3.9, 3.10
 
-### Preliminar packages:
+### Preliminary packages:
 
-Some preliminar packages may be necessary:
+Some preliminary packages may be necessary:
 
 ```
-$ sudo apt-get install python3.x-dev # Ubuntu
+# Ubuntu (where "x" is your Python version)
+$ sudo apt install python3.x-dev
+$ sudo apt install python3.x-venv
 ```
 
 ### Virtual environment (venv) 
@@ -45,7 +47,7 @@ It is highly recommended to work with virtual environments in Python
 ```
 # From shell terminal, in project directory:
 # (creates a virtual environment ".venv")
-$ python3 -m venv .venv
+$ python3.x -m venv .venv
 
 # Activate the virtual environment:
 

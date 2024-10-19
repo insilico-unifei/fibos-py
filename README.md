@@ -66,7 +66,6 @@ $ .venv\Scripts\activate
 These additional Python packages may be required (install in .venv):
 
 ```
-(.venv)$ pip install testresources 
 (.venv)$ pip install biopython 
 ```
 
@@ -92,8 +91,6 @@ parameter and returns the results as a table summarized by residue.
 
 ```     
 import os
-import shutil
-import pkgutil
 import fibos
 from Bio.PDB import PDBList
 from concurrent.futures import ThreadPoolExecutor

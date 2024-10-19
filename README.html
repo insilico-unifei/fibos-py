@@ -254,6 +254,7 @@ if (window.hljs) {
 
 
 
+
 <style type="text/css">
 .main-container {
 max-width: 940px;
@@ -275,6 +276,9 @@ outline: none;
 summary {
 display: list-item;
 }
+details > summary > p:only-child {
+display: inline;
+}
 pre code {
 padding: 0;
 }
@@ -293,23 +297,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -411,8 +409,7 @@ $ .venv\Scripts\activate
 <h3>Instalations</h3>
 <p>These additional Python packages may be required (install in
 .venv):</p>
-<pre><code>(.venv)$ pip install testresources 
-(.venv)$ pip install biopython </code></pre>
+<pre><code>(.venv)$ pip install biopython </code></pre>
 <p>Install fibos:</p>
 <pre><code>pip install git+https://github.com/insilico-unifei/fibos-py</code></pre>
 </div>
@@ -434,8 +431,6 @@ results as a table summarized by residue.</p></li>
 <div id="a-simple-example" class="section level3">
 <h3>A simple example:</h3>
 <pre><code>import os
-import shutil
-import pkgutil
 import fibos
 from Bio.PDB import PDBList
 from concurrent.futures import ThreadPoolExecutor

@@ -32,12 +32,17 @@ Tested on: 3.9, 3.10
 
 ### Preliminary packages:
 
-Some preliminary packages may be necessary:
+Some preliminary packages may be necessary.
 
+On Ubuntu (where "x" is your Python version) :
 ```
-# Ubuntu (where "x" is your Python version)
 $ sudo apt install python3.x-dev
 $ sudo apt install python3.x-venv
+```
+
+On Windows, we need git:
+```
+https://git-scm.com/downloads
 ```
 
 ### Virtual environment (venv) 

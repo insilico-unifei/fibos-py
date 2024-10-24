@@ -34,14 +34,15 @@ Tested on: 3.9, 3.10
 
 Some preliminary packages may be necessary.
 
-On Ubuntu (where "x" is your Python version) :
+On Ubuntu, where "x" is your Python version:
 ```
 $ sudo apt install python3.x-dev
 $ sudo apt install python3.x-venv
 ```
 
-On Windows, we need git:
+On Windows, we need Desktop Development with C++ from Microsoft C++ Build Tools, and git:
 ```
+https://visualstudio.microsoft.com/visual-cpp-build-tools/ 
 https://git-scm.com/downloads
 ```
 

@@ -46,9 +46,10 @@ https://visualstudio.microsoft.com/visual-cpp-build-tools/
 https://git-scm.com/downloads
 ```
 
-### Virtual environment (venv) 
+### Virtual environment (Venv) 
 
-It is highly recommended to work with virtual environments in Python
+It is highly recommended to work with virtual environments (Venv or Conda) in Python. 
+We show how create Venv:
 
 ```
 # From shell terminal, in project directory:
@@ -95,8 +96,9 @@ parameter and returns the results as a table summarized by residue.
 
 ### Quickstart:
 
-```         
+```Python
 import fibos
+import os
 
 # Calculate FIBOS per atom and create .srf files in fibos_files folder
 pdb_fibos = fibos.occluded_surface("1fib", method="FIBOS")
@@ -110,7 +112,7 @@ print(pdb_fibos.head(3))
 # 2  GLN 1@N___>HIS 3@CG__             1  0.160     0.991     6.27
 
 # Calculate OSP metric per residue from .srf file in fibos_files folder
-pdb_osp = fibos.osp("fibos_files/prot_1fib.srf")
+pdb_osp = fibos.osp(os.path.join("fibos_files","prot_1fib.srf"))
 
 # Show first 3 rows of pdb_osp table
 print(pdb_osp.head(3))
@@ -123,9 +125,9 @@ print(pdb_osp.head(3))
 
 ### A more complex example:
 
-```     
-import os
+```Python
 import fibos
+import os
 from Bio.PDB import PDBList
 from multiprocessing import Pool
 
@@ -146,7 +148,7 @@ if __name__ == "__main__":
 
     # Get PDB files from RCSB and put them into the PDB folder  
     # Rename files and return path to them 
-    # (i.e., PDB/prot_8rxn.ent -> PDB/8rxn.pdb)
+    # (i.e., PDB\prot_8rxn.ent -> PDB\8rxn.pdb)
     pdb_paths = []
     for pdb_id in pdb_ids:
 	    original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=folder, file_format='pdb')
@@ -178,6 +180,10 @@ if __name__ == "__main__":
     
     # Rename the fibos_files folder to preserve it and prevent overwriting
     os.rename("fibos_files", "fibos_files_test")
+    
+# OBS: If you need to run this example in a Jupyter Notebook, move the 
+# occluded_surface_worker function to a "fun.py" file and import it as 
+# "from fun import occluded_surface_worker"
 ```
 
 ### Case Study:

@@ -391,9 +391,9 @@ Build Tools, and git:</p>
 https://git-scm.com/downloads</code></pre>
 </div>
 <div id="virtual-environment-venv" class="section level3">
-<h3>Virtual environment (venv)</h3>
-<p>It is highly recommended to work with virtual environments in
-Python</p>
+<h3>Virtual environment (Venv)</h3>
+<p>It is highly recommended to work with virtual environments (Venv or
+Conda) in Python. We show how create Venv:</p>
 <pre><code># From shell terminal, in project directory:
 # Create a virtual environment &quot;.venv&quot;
 $ python3.x -m venv .venv
@@ -434,7 +434,8 @@ results as a table summarized by residue.</p></li>
 </ol>
 <div id="quickstart" class="section level3">
 <h3>Quickstart:</h3>
-<pre><code>import fibos
+<pre class="python"><code>import fibos
+import os
 
 # Calculate FIBOS per atom and create .srf files in fibos_files folder
 pdb_fibos = fibos.occluded_surface(&quot;1fib&quot;, method=&quot;FIBOS&quot;)
@@ -448,7 +449,7 @@ print(pdb_fibos.head(3))
 # 2  GLN 1@N___&gt;HIS 3@CG__             1  0.160     0.991     6.27
 
 # Calculate OSP metric per residue from .srf file in fibos_files folder
-pdb_osp = fibos.osp(&quot;fibos_files/prot_1fib.srf&quot;)
+pdb_osp = fibos.osp(os.path.join(&quot;fibos_files&quot;,&quot;prot_1fib.srf&quot;))
 
 # Show first 3 rows of pdb_osp table
 print(pdb_osp.head(3))
@@ -460,8 +461,8 @@ print(pdb_osp.head(3))
 </div>
 <div id="a-more-complex-example" class="section level3">
 <h3>A more complex example:</h3>
-<pre><code>import os
-import fibos
+<pre class="python"><code>import fibos
+import os
 from Bio.PDB import PDBList
 from multiprocessing import Pool
 
@@ -482,7 +483,7 @@ if __name__ == &quot;__main__&quot;:
 
     # Get PDB files from RCSB and put them into the PDB folder  
     # Rename files and return path to them 
-    # (i.e., PDB/prot_8rxn.ent -&gt; PDB/8rxn.pdb)
+    # (i.e., PDB\prot_8rxn.ent -&gt; PDB\8rxn.pdb)
     pdb_paths = []
     for pdb_id in pdb_ids:
         original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=folder, file_format=&#39;pdb&#39;)
@@ -513,7 +514,11 @@ if __name__ == &quot;__main__&quot;:
     print(pdb_osp[0].head(3))
     
     # Rename the fibos_files folder to preserve it and prevent overwriting
-    os.rename(&quot;fibos_files&quot;, &quot;fibos_files_test&quot;)</code></pre>
+    os.rename(&quot;fibos_files&quot;, &quot;fibos_files_test&quot;)
+    
+# OBS: If you need to run this example in a Jupyter Notebook, move the 
+# occluded_surface_worker function to a &quot;fun.py&quot; file and import it as 
+# &quot;from fun import occluded_surface_worker&quot;</code></pre>
 </div>
 <div id="case-study" class="section level3">
 <h3>Case Study:</h3>

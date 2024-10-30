@@ -24,26 +24,72 @@ However, it has been tested on the following versions:
 - **Windows**: Windows 11
 - **Mac**: MacOS 15.0.1
 
+## Compilers
+
+- gfortran ($\geq$ 9.4)
+- gcc ($\geq$ 9.4)
+
 ## Python versions
 
 Tested on: 3.9, 3.10
 
 ## Instalations
 
-### Preliminary packages:
+### Preliminary:
 
-Some preliminary packages may be necessary.
+Some preliminary actions according to OS:
 
-On Ubuntu, where "x" is your Python version:
+#### Linux (Ubuntu)
+
+Install gfortran, Python dev and venv:
 ```
-$ sudo apt install python3.x-dev
-$ sudo apt install python3.x-venv
+$ sudo apt install gfortran
+$ sudo apt install python3.x-dev python3.x-venv
 ```
+where "x" is your Python version.
 
-On Windows, we need Desktop Development with C++ from Microsoft C++ Build Tools, and git:
+#### Windows
+Install Desktop Development with C++ from Microsoft C++ Build Tools from:
 ```
 https://visualstudio.microsoft.com/visual-cpp-build-tools/ 
+```
+
+Install gfortran (version 13.2+):
+```
+http://www.equation.com/servlet/equation.cmd?fa=fortran
+```
+
+Install git from:
+```
 https://git-scm.com/downloads
+```
+
+#### MacOS
+
+Install Homebrew:
+```
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/
+HEAD/install.sh)”
+```
+
+In your shell, set the PATH to include the Homebrew bin folder by adding it into 
+the .zshrc file
+
+```
+export PATH= "/path/to/homebrew/bin:$PATH"
+```
+where "/path/to/homebrew/bin" is the actual homebrew path in your system. So, reload it:
+
+```
+$ source ~/.zshrc
+```
+
+Install gfortran and gcc from:
+
+```
+$ brew install gfortran
+$ brew install gcc
+
 ```
 
 ### Virtual environment (Venv) 

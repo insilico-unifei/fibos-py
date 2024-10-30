@@ -373,22 +373,55 @@ Mac. However, it has been tested on the following versions:</p>
 <li><strong>Mac</strong>: MacOS 15.0.1</li>
 </ul>
 </div>
+<div id="compilers" class="section level2">
+<h2>Compilers</h2>
+<ul>
+<li>gfortran (<span class="math inline">\(\geq\)</span> 9.4)</li>
+<li>gcc (<span class="math inline">\(\geq\)</span> 9.4)</li>
+</ul>
+</div>
 <div id="python-versions" class="section level2">
 <h2>Python versions</h2>
 <p>Tested on: 3.9, 3.10</p>
 </div>
 <div id="instalations" class="section level2">
 <h2>Instalations</h2>
-<div id="preliminary-packages" class="section level3">
-<h3>Preliminary packages:</h3>
-<p>Some preliminary packages may be necessary.</p>
-<p>On Ubuntu, where “x” is your Python version:</p>
-<pre><code>$ sudo apt install python3.x-dev
-$ sudo apt install python3.x-venv</code></pre>
-<p>On Windows, we need Desktop Development with C++ from Microsoft C++
-Build Tools, and git:</p>
-<pre><code>https://visualstudio.microsoft.com/visual-cpp-build-tools/ 
-https://git-scm.com/downloads</code></pre>
+<div id="preliminary" class="section level3">
+<h3>Preliminary:</h3>
+<p>Some preliminary actions according to OS:</p>
+<div id="linux-ubuntu" class="section level4">
+<h4>Linux (Ubuntu)</h4>
+<p>Install gfortran, Python dev and venv:</p>
+<pre><code>$ sudo apt install gfortran
+$ sudo apt install python3.x-dev python3.x-venv</code></pre>
+<p>where “x” is your Python version.</p>
+</div>
+<div id="windows" class="section level4">
+<h4>Windows</h4>
+<p>Install Desktop Development with C++ from Microsoft C++ Build Tools
+from:</p>
+<pre><code>https://visualstudio.microsoft.com/visual-cpp-build-tools/ </code></pre>
+<p>Install gfortran (version 13.2+):</p>
+<pre><code>http://www.equation.com/servlet/equation.cmd?fa=fortran</code></pre>
+<p>Install git from:</p>
+<pre><code>https://git-scm.com/downloads</code></pre>
+</div>
+<div id="macos" class="section level4">
+<h4>MacOS</h4>
+<p>Install Homebrew:</p>
+<pre><code>$ /bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/
+HEAD/install.sh)”</code></pre>
+<p>In your shell, set the PATH to include the Homebrew bin folder by
+adding it into the .zshrc file</p>
+<pre><code>export PATH= &quot;/path/to/homebrew/bin:$PATH&quot;</code></pre>
+<p>where “/path/to/homebrew/bin” is the actual homebrew path in your
+system. So, reload it:</p>
+<pre><code>$ source ~/.zshrc</code></pre>
+<p>Install gfortran and gcc from:</p>
+<pre><code>$ brew install gfortran
+$ brew install gcc
+</code></pre>
+</div>
 </div>
 <div id="virtual-environment-venv" class="section level3">
 <h3>Virtual environment (Venv)</h3>

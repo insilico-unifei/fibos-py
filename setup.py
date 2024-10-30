@@ -14,10 +14,10 @@ def configuration(parent_package='', top_path=None):
 if __name__ == '__main__':
     setup(
         name = 'fibos',
-        version = '1.0.0.6',
+        version = '1.0.0.7',
         install_requires = [
-            'setuptools==67.8.0',
-            'numpy==1.21.5',
+            'setuptools==70.0.0',
+            'numpy==1.22.0',
             'biopython==1.81',
             'testresources>=1.8.0',
             'pandas==2.0.0',

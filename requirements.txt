@@ -1,7 +1,7 @@
 biopython==1.81
-numpy==1.21.5
+numpy==1.22.0
 pandas==2.0.0
 pip==24.3.1
-setuptools==67.8.0
+setuptools==70.0.0
 testresources==2.0.1
 wheel==0.44.0

@@ -177,7 +177,10 @@ import os
 from Bio.PDB import PDBList
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
-from fun import occluded_surface_worker
+
+# Auxiliary function to calculate occluded surface
+def occluded_surface_worker(pdb_path, method):
+    return fibos.occluded_surface(pdb_path, method=method)
 
 if __name__ == "__main__":
 
@@ -208,7 +211,6 @@ if __name__ == "__main__":
         new_path = os.path.join(pdb_folder, f"{pdb_id.lower()}.pdb")
         if not os.path.exists(new_path):
             original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=pdb_folder, file_format='pdb')
-            #new_path = os.path.join(pdb_folder, f"{pdb_id.lower()}.pdb")
             os.rename(original_path, new_path)
         pdb_paths.append(new_path)
 

@@ -444,9 +444,8 @@ $ .venv\Scripts\activate
 </div>
 <div id="basic-instalations" class="section level3">
 <h3>Basic Instalations</h3>
-<p>These additional Python packages may be required (install in
-.venv):</p>
-<pre><code>(.venv)$ pip install biopython </code></pre>
+<p>Install packages in requirements.txt (in .venv):</p>
+<pre><code>(.venv)$ pip install -r requirements.txt</code></pre>
 <p>Install fibos:</p>
 <pre><code>(.venv)$ pip install git+https://github.com/insilico-unifei/fibos-py</code></pre>
 </div>
@@ -476,7 +475,7 @@ pdb_fibos = fibos.occluded_surface(&quot;1fib&quot;, method=&quot;FIBOS&quot;)
 # Show first 3 rows of pdb_fibos table
 print(pdb_fibos.head(3))
 
-#              INTERACTION NUMBER_POINTS   AREA RAYLENGTH DISTANCE
+#                     ATOM NUMBER_POINTS   AREA RAYLENGTH DISTANCE
 # 0  GLN 1@N___&gt;HIS 3@NE2_             6  1.287     0.791     5.49
 # 1  GLN 1@N___&gt;HIS 3@CE1_             1  0.200     0.894     6.06
 # 2  GLN 1@N___&gt;HIS 3@CG__             1  0.160     0.991     6.27
@@ -497,16 +496,27 @@ print(pdb_osp.head(3))
 <pre class="python"><code>import fibos
 import os
 from Bio.PDB import PDBList
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 
 # Auxiliary function to calculate occluded surface
 def occluded_surface_worker(pdb_path, method):
     return fibos.occluded_surface(pdb_path, method=method)
 
 if __name__ == &quot;__main__&quot;:
+
+    # source of PDB files
+    pdb_folder = &quot;PDB&quot;
+
+    # fibos folder output
+    fibos_folder = &quot;fibos_files&quot;
+
     # Create PDB folder if it does not exist
-    folder = &quot;PDB&quot;
-    os.makedirs(folder, exist_ok=True)
+    os.makedirs(pdb_folder, exist_ok=True)
+    
+    # Prevent overwriting of fibos folder output
+    if os.path.exists(fibos_folder):
+        raise Exception(f&quot;{fibos_folder} folder exists, rename or remove it!&quot;)
 
     # PDB ids list
     pdb_ids = [&quot;8RXN&quot;, &quot;1ROP&quot;]
@@ -516,27 +526,33 @@ if __name__ == &quot;__main__&quot;:
 
     # Get PDB files from RCSB and put them into the PDB folder  
     # Rename files and return path to them 
-    # (i.e., PDB\prot_8rxn.ent -&gt; PDB\8rxn.pdb)
+    # (i.e., PDB/prot_8rxn.ent -&gt; PDB/8rxn.pdb)
     pdb_paths = []
     for pdb_id in pdb_ids:
-        original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=folder, file_format=&#39;pdb&#39;)
-        new_path = os.path.join(folder, f&quot;{pdb_id.lower()}.pdb&quot;)
+        original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=pdb_folder, file_format=&#39;pdb&#39;)
+        new_path = os.path.join(pdb_folder, f&quot;{pdb_id.lower()}.pdb&quot;)
         os.rename(original_path, new_path)
         pdb_paths.append(new_path)
 
     print(pdb_paths)
     
-    # Calculate in parallel FIBOS per atom per PDBid 
+    # Detect number of physical cores and update cores according to pdb_ids size
+    my_ideal_cores = min(os.cpu_count(), len(pdb_ids))
+    if(my_ideal_cores&lt;1): my_ideal_cores = 1
+
+    # Calculate in parallel FIBOS per PDBid 
     # Create .srf files in fibos_files folder
     # Return FIBOS tables in pdb_fibos list
-    with Pool(processes=os.cpu_count()) as pool:
-        pdb_fibos = pool.starmap(occluded_surface_worker, [(pdb_path, &quot;FIBOS&quot;) for pdb_path in pdb_paths])
-        
+
+    worker_with_params = partial(occluded_surface_worker, method=&quot;FIBOS&quot;)
+    with ProcessPoolExecutor() as executor:
+        pdb_fibos = list(executor.map(worker_with_params, pdb_paths))
+
     # Show first 3 rows of first pdb_fibos table
     print(pdb_fibos[0].head(3))
     
     # Prepare paths for the generated .srf files in folder fibos_files
-    srf_paths = list(map(lambda pdb_id: os.path.join(&quot;fibos_files&quot;, f&quot;prot_{pdb_id.lower()}.srf&quot;), pdb_ids))
+    srf_paths = list(map(lambda pdb_id: os.path.join(fibos_folder, f&quot;prot_{pdb_id.lower()}.srf&quot;), pdb_ids))
     print(srf_paths)
     
     # Calculate OSP metric by residue
@@ -545,9 +561,6 @@ if __name__ == &quot;__main__&quot;:
     
     # Show first 3 rows of the first pdb_osp table
     print(pdb_osp[0].head(3))
-    
-    # Rename the fibos_files folder to preserve it and prevent overwriting
-    os.rename(&quot;fibos_files&quot;, &quot;fibos_files_test&quot;)
     
 # OBS: If you need to run this example in a Jupyter Notebook, move the 
 # occluded_surface_worker function to a &quot;fun.py&quot; file and import it as 

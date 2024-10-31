@@ -116,10 +116,10 @@ $ .venv\Scripts\activate
 
 ### Basic Instalations
 
-These additional Python packages may be required (install in .venv):
+Install packages in requirements.txt (in .venv):
 
 ```
-(.venv)$ pip install biopython 
+(.venv)$ pip install -r requirements.txt
 ```
 
 Install fibos:
@@ -152,7 +152,7 @@ pdb_fibos = fibos.occluded_surface("1fib", method="FIBOS")
 # Show first 3 rows of pdb_fibos table
 print(pdb_fibos.head(3))
 
-#              INTERACTION NUMBER_POINTS   AREA RAYLENGTH DISTANCE
+#                     ATOM NUMBER_POINTS   AREA RAYLENGTH DISTANCE
 # 0  GLN 1@N___>HIS 3@NE2_             6  1.287     0.791     5.49
 # 1  GLN 1@N___>HIS 3@CE1_             1  0.200     0.894     6.06
 # 2  GLN 1@N___>HIS 3@CG__             1  0.160     0.991     6.27
@@ -175,16 +175,27 @@ print(pdb_osp.head(3))
 import fibos
 import os
 from Bio.PDB import PDBList
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 
 # Auxiliary function to calculate occluded surface
 def occluded_surface_worker(pdb_path, method):
     return fibos.occluded_surface(pdb_path, method=method)
 
 if __name__ == "__main__":
+
+    # source of PDB files
+    pdb_folder = "PDB"
+
+    # fibos folder output
+    fibos_folder = "fibos_files"
+
     # Create PDB folder if it does not exist
-    folder = "PDB"
-    os.makedirs(folder, exist_ok=True)
+    os.makedirs(pdb_folder, exist_ok=True)
+    
+    # Prevent overwriting of fibos folder output
+    if os.path.exists(fibos_folder):
+        raise Exception(f"{fibos_folder} folder exists, rename or remove it!")
 
     # PDB ids list
     pdb_ids = ["8RXN", "1ROP"]
@@ -194,27 +205,33 @@ if __name__ == "__main__":
 
     # Get PDB files from RCSB and put them into the PDB folder  
     # Rename files and return path to them 
-    # (i.e., PDB\prot_8rxn.ent -> PDB\8rxn.pdb)
+    # (i.e., PDB/prot_8rxn.ent -> PDB/8rxn.pdb)
     pdb_paths = []
     for pdb_id in pdb_ids:
-	    original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=folder, file_format='pdb')
-	    new_path = os.path.join(folder, f"{pdb_id.lower()}.pdb")
-	    os.rename(original_path, new_path)
-	    pdb_paths.append(new_path)
+        original_path = pdbl.retrieve_pdb_file(pdb_id, pdir=pdb_folder, file_format='pdb')
+        new_path = os.path.join(pdb_folder, f"{pdb_id.lower()}.pdb")
+        os.rename(original_path, new_path)
+        pdb_paths.append(new_path)
 
     print(pdb_paths)
     
-    # Calculate in parallel FIBOS per atom per PDBid 
+    # Detect number of physical cores and update cores according to pdb_ids size
+    my_ideal_cores = min(os.cpu_count(), len(pdb_ids))
+    if(my_ideal_cores<1): my_ideal_cores = 1
+
+    # Calculate in parallel FIBOS per PDBid 
     # Create .srf files in fibos_files folder
     # Return FIBOS tables in pdb_fibos list
-    with Pool(processes=os.cpu_count()) as pool:
-        pdb_fibos = pool.starmap(occluded_surface_worker, [(pdb_path, "FIBOS") for pdb_path in pdb_paths])
-        
+
+    worker_with_params = partial(occluded_surface_worker, method="FIBOS")
+    with ProcessPoolExecutor() as executor:
+        pdb_fibos = list(executor.map(worker_with_params, pdb_paths))
+
     # Show first 3 rows of first pdb_fibos table
     print(pdb_fibos[0].head(3))
     
     # Prepare paths for the generated .srf files in folder fibos_files
-    srf_paths = list(map(lambda pdb_id: os.path.join("fibos_files", f"prot_{pdb_id.lower()}.srf"), pdb_ids))
+    srf_paths = list(map(lambda pdb_id: os.path.join(fibos_folder, f"prot_{pdb_id.lower()}.srf"), pdb_ids))
     print(srf_paths)
     
     # Calculate OSP metric by residue
@@ -223,9 +240,6 @@ if __name__ == "__main__":
     
     # Show first 3 rows of the first pdb_osp table
     print(pdb_osp[0].head(3))
-    
-    # Rename the fibos_files folder to preserve it and prevent overwriting
-    os.rename("fibos_files", "fibos_files_test")
     
 # OBS: If you need to run this example in a Jupyter Notebook, move the 
 # occluded_surface_worker function to a "fun.py" file and import it as 

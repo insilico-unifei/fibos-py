@@ -217,13 +217,14 @@ if __name__ == "__main__":
     print(pdb_paths)
     
     # Detect number of physical cores and update cores according to pdb_ids size
-    my_ideal_cores = min(os.cpu_count(), len(pdb_ids))
+    ideal_cores = min(os.cpu_count(), len(pdb_ids))
 
     # Calculate in parallel FIBOS per PDBid 
     # Create .srf files in fibos_files folder
     # Return FIBOS tables in pdb_fibos list
+
     worker_with_params = partial(occluded_surface_worker, method="FIBOS")
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=ideal_cores) as executor:
         pdb_fibos = list(executor.map(worker_with_params, pdb_paths))
 
     # Show first 3 rows of first pdb_fibos table

@@ -95,20 +95,20 @@ $ brew install gcc
 ### Virtual environment (Venv) 
 
 It is highly recommended to work with virtual environments (Venv or Conda) in Python. 
-We show how create Venv:
+We show below how to create Venv:
 
 ```
-# From shell terminal, in project directory:
+# From shell terminal, in working directory:
 # Create a virtual environment ".venv"
+
 $ python3.x -m venv .venv
 (where "x" is your Python version.)
 
 # Activate the virtual environment:
-
-# Mac/Linux
+## Mac/Linux
 $ source .venv/bin/activate
 
-# Windows
+## Windows
 $ .venv\Scripts\activate
 
 # The prompt will change to something like:
@@ -222,7 +222,6 @@ if __name__ == "__main__":
     # Calculate in parallel FIBOS per PDBid 
     # Create .srf files in fibos_files folder
     # Return FIBOS tables in pdb_fibos list
-
     worker_with_params = partial(occluded_surface_worker, method="FIBOS")
     with ProcessPoolExecutor() as executor:
         pdb_fibos = list(executor.map(worker_with_params, pdb_paths))

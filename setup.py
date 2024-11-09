@@ -17,10 +17,10 @@ if __name__ == '__main__':
         version = '1.0.0.8',
         install_requires = [
             'setuptools==70.0.0',
-            'numpy==1.22.0',
+            'numpy==1.22.4',
             'biopython==1.841',
             'testresources==2.0.1',
-            'pandas==2.0.3',
+            'pandas==2.2.3',
             'wheel==0.45.0',
         ],
         python_requires='<3.11, <4',

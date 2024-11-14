@@ -14,7 +14,7 @@ def configuration(parent_package='', top_path=None):
 if __name__ == '__main__':
     setup(
         name = 'fibos',
-        version = '1.0.0.8',
+        version = '1.0.0.9',
         install_requires = [
             'setuptools==70.0.0',
             'numpy==1.22.4',

@@ -186,7 +186,7 @@ def occluded_surface_worker(pdb_path, method):
 # Get PDB file from RCSB and put it into the PDB folder  
 # Rename the file appropriately and return path to it 
 # (i.e., PDB/prot_8rxn.ent -> PDB/8rxn.pdb)
-def get_pdb(id, path = "."):
+def get_pdb(id, path="."):
     pdbl = PDBList()
     new_path = os.path.join(path, f"{id.lower()}.pdb")
     if not os.path.exists(new_path):
@@ -205,10 +205,6 @@ if __name__ == "__main__":
     # Create PDB folder if it does not exist
     os.makedirs(pdb_folder, exist_ok=True)
     
-    # Prevent overwriting of fibos folder output
-    if os.path.exists(fibos_folder):
-        raise Exception(f"{fibos_folder} folder exists, rename or remove it!")
-
     # PDB ids list
     pdb_ids = ["8RXN", "1ROP"]
 

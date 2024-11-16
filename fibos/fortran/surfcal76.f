@@ -143,7 +143,7 @@ c check if residue i is n-ter or c-ter
 	if(resinf(4)(1:5).eq. '     ') icter = 1 !c-terminal
 
 c display on screen residue being calculated
-        write(6,57)resinf(3)
+c        write(6,57)resinf(3)
 57      format(5x,a13)
 
 c readin the vdw radii

@@ -117,11 +117,13 @@ $ .venv\Scripts\activate
 
 ### Basic Instalations
 
-Install packages in requirements.txt (in .venv):
+Install packages in requirements.txt (in .venv):\
+(On Windows, if you get any error here, try running this command again)
 
 ```
 (.venv)$ pip install -r requirements.txt
 ```
+
 
 Install fibos:
 

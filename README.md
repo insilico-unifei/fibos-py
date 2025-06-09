@@ -14,7 +14,7 @@ ensures a more uniform and even distribution of surface dots, improving the accu
 of the algorithm.
 
 **PYPI FIBOS PACKAGE:**\
-https://pypi.org/project/fibos/ \
+https://pypi.org/project/fibos/  \
 
 For **R fibos** version: \
 CRAN: https://cran.r-project.org/web/packages/fibos/index.html \

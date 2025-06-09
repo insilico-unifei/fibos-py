@@ -450,18 +450,21 @@ $ .venv\Scripts\activate
 # The prompt will change to something like:
 (.venv)$  </code></pre>
 </div>
-<div id="pypi-install-fibos-recommended" class="section level3">
-<h3>PyPI install fibos (recommended):</h3>
+<div id="fibos-installation" class="section level3">
+<h3>FIBOS INSTALLATION</h3>
+<div id="from-pypi-install-recommended" class="section level4">
+<h4>From PyPI install (recommended):</h4>
 <pre><code>(.venv)$ pip install fibos</code></pre>
 </div>
-<div id="github-install-fibos" class="section level3">
-<h3>GitHub install fibos:</h3>
+<div id="from-github-install" class="section level4">
+<h4>From GitHub install:</h4>
 <p>Install packages in requirements.txt (in .venv):<br />
 (On Windows, if you get any error here, try running this command
 again)</p>
 <pre><code>(.venv)$ pip install -r requirements.txt</code></pre>
 <p>Install fibos:</p>
 <pre><code>(.venv)$ pip install git+https://github.com/insilico-unifei/fibos-py</code></pre>
+</div>
 </div>
 </div>
 <div id="main-functions" class="section level2">
@@ -483,10 +486,10 @@ environment for some Python packages used by fibos in R. This function
 must be run before using any other functionality.</p></li>
 <li><p><strong><code>get_radii()</code></strong>: Returns a table with
 atom names and van der Waals radii used in the calculations</p></li>
-<li><p><strong><code>set_radii(radii_values)</code></strong>: Updates
-the table containing new atom names and van der Waals radii</p></li>
-<li><p><strong><code>set_radii(radii_values)</code></strong>: Resets the
-atom names and van der Waals radii table to default values</p></li>
+<li><p><strong><code>set_radii(radii_table)</code></strong>: Updates the
+table containing new atom names and van der Waals radii</p></li>
+<li><p><strong><code>reset_radii()</code></strong>: Resets the atom
+names and van der Waals radii table to default values</p></li>
 </ol>
 <div id="quickstart" class="section level3">
 <h3>Quickstart:</h3>

@@ -120,7 +120,9 @@ $ .venv\Scripts\activate
 (.venv)$  
 ```
 
-### PyPI install fibos (recommended):
+### FIBOS INSTALLATION ###
+
+#### From PyPI install (recommended):
 
 
 ```
@@ -128,7 +130,7 @@ $ .venv\Scripts\activate
 ```
 
 
-### GitHub install fibos:
+#### From GitHub install:
 
 Install packages in requirements.txt (in .venv):\
 (On Windows, if you get any error here, try running this command again)

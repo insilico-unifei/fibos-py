@@ -159,9 +159,9 @@ parameter and returns the results as a table summarized by residue.
 
 4.  **`get_radii()`**: Returns a table with atom names and van der Waals radii used in the calculations
 
-5.  **`set_radii(radii_values)`**: Updates the table containing new atom names and van der Waals radii
+5.  **`set_radii(radii_table)`**: Updates the table containing new atom names and van der Waals radii
 
-6.  **`set_radii(radii_values)`**: Resets the atom names and van der Waals radii table to default values
+6.  **`reset_radii()`**: Resets the atom names and van der Waals radii table to default values
 
 ### Quickstart:
 
